@@ -1,0 +1,30 @@
+!! CLOUD-WITH-DEV AUTOMATION GENERATED CLI !!
+!! VENDOR: JUNIPER | SYSTEM: PRIMARY | TASK: chg120 !!
+!! COMMIT: a1b2c3d4e5f6789 !!
+
+# System Configuration
+set system host-name RT-400001-PRI-01
+set system services ssh
+set system services netconf ssh
+
+# Outside Interface Configuration
+set interfaces ge-0/0/0 description "WAN_CIRCUIT_PRIMARY"
+set interfaces ge-0/0/0 unit 0 family inet address 213.133.145.129/31
+
+# Inside Interface & VRRP
+set interfaces ge-0/0/1 unit 0 family inet address 217.169.60.186/29
+set interfaces ge-0/0/1 unit 0 family inet vrrp-group 10 virtual-address 217.169.60.185
+set interfaces ge-0/0/1 unit 0 family inet vrrp-group 10 priority 200
+set interfaces ge-0/0/1 unit 0 family inet vrrp-group 10 preempt
+
+# BGP Routing
+set routing-options autonomous-system 65501
+set protocols bgp group INTERNAL type internal
+set protocols bgp group INTERNAL local-address 213.133.153.54
+set protocols bgp group INTERNAL neighbor 213.133.153.55
+set protocols bgp group EXTERNAL type external
+set protocols bgp group EXTERNAL peer-as 6908
+set protocols bgp group EXTERNAL neighbor 213.133.145.128
+
+# QoS Configuration
+set class-of-service interfaces ge-0/0/0 shaping-rate 100m
